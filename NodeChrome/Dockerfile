@@ -2,7 +2,7 @@
 # NOTE: DO *NOT* EDIT THIS FILE.  IT IS GENERATED.
 # PLEASE UPDATE Dockerfile.txt INSTEAD OF THIS FILE
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-FROM selenium/node-base:4.3.0-20220628
+FROM registry.us-east-1.aliyuncs.com/degree72/node-base:103-20220704
 LABEL authors=SeleniumHQ
 
 USER root
@@ -41,7 +41,7 @@ USER 1200
 # Latest released version will be used by default
 #============================================
 ARG CHROME_DRIVER_VERSION
-RUN if [ -z "$CHROME_DRIVER_VERSION" ]; \
+RUN if [ -z "" ]; \
   then CHROME_MAJOR_VERSION=$(google-chrome --version | sed -E "s/.* ([0-9]+)(\.[0-9]+){3}.*/\1/") \
     && CHROME_DRIVER_VERSION=$(wget --no-verbose -O - "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR_VERSION}"); \
   fi \

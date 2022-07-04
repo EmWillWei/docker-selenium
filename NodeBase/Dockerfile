@@ -2,7 +2,7 @@
 # NOTE: DO *NOT* EDIT THIS FILE.  IT IS GENERATED.
 # PLEASE UPDATE Dockerfile.txt INSTEAD OF THIS FILE
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-FROM selenium/base:4.3.0-20220628
+FROM registry.us-east-1.aliyuncs.com/degree72/base:103-20220704
 LABEL authors=SeleniumHQ
 
 USER root
@@ -28,7 +28,7 @@ ENV LANG ${LANGUAGE}
 # Layer size: small: ~9 MB MB (with --no-install-recommends)
 RUN apt-get -qqy update \
   && apt-get -qqy --no-install-recommends install \
-    language-pack-en \
+    # language-pack-en \
     tzdata \
     locales \
   && locale-gen ${LANGUAGE} \
@@ -85,7 +85,7 @@ RUN apt-get -qqy update \
     fonts-ipafont-gothic \
     fonts-wqy-zenhei \
     fonts-tlwg-loma-otf \
-    ttf-ubuntu-font-family \
+    # ttf-ubuntu-font-family \
     fonts-noto-color-emoji \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get -qyy clean
@@ -114,12 +114,12 @@ RUN  wget -nv -O noVNC.zip \
 # Run this command for executable file permissions for /dev/shm when this is a "child" container running in Docker Desktop and WSL2 distro
 #=========================================================================================================================================
 RUN chmod +x /dev/shm
-
+COPY entrypoint /
 #===================================================
 # Run the following commands as non-privileged user
 #===================================================
 
-USER 1200
+USER 50000
 
 #==============================
 # Scripts to run Selenium Node and XVFB
@@ -144,9 +144,9 @@ RUN mkdir -p ${HOME}/.vnc \
 #==========
 # Relaxing permissions for OpenShift and other non-sudo environments
 #==========
-RUN sudo chmod -R 777 ${HOME} \
-  && sudo chgrp -R 0 ${HOME} \
-  && sudo chmod -R g=u ${HOME}
+# RUN sudo chmod -R 777 ${SELUSERHOME} \
+  # && sudo chgrp -R 0 ${SELUSERHOME} \
+  # && sudo chmod -R g=u ${SELUSERHOME}
 
 #==============================
 # Scripts to run fluxbox, x11vnc and noVNC

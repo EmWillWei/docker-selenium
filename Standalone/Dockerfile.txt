@@ -1,4 +1,4 @@
-USER 1200
+USER 50000
 
 #====================================
 # Scripts to run Selenium Standalone

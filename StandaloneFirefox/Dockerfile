@@ -2,10 +2,10 @@
 # NOTE: DO *NOT* EDIT THIS FILE.  IT IS GENERATED.
 # PLEASE UPDATE Dockerfile.txt INSTEAD OF THIS FILE
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-FROM selenium/node-firefox:4.3.0-20220628
+FROM registry.us-east-1.aliyuncs.com/degree72/node-firefox:103-20220704
 LABEL authors=SeleniumHQ
 
-USER 1200
+USER 50000
 
 #====================================
 # Scripts to run Selenium Standalone

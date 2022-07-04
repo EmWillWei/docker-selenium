@@ -1,5 +1,4 @@
-FROM python:3.8.6-buster
+FROM selenium/standalone-chrome:local-20220704
 
-WORKDIR /usr/src/app
-
-COPY . .
+COPY entry_point.sh /opt/bin/
+ENTRYPOINT ["/opt/bin/entry_point.sh"]

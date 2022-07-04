@@ -13,4 +13,4 @@ function kill_all_process(){
     (ps -x --sort=-pid | awk 'NR>1{print $1}' | xargs kill ) || ( echo "I am called" && exit 0)
 }
 
-( (/usr/bin/dumb-init -- /entrypoint ${AIRFLOW_COMMAND}) && sleep 20 && kill_all_process ) & ( echo "start supvisord" && /usr/bin/supervisord --configuration /etc/supervisord.conf ) 
+( echo "start airflow command" && (/usr/bin/dumb-init -- /entrypoint ${AIRFLOW_COMMAND}) && sleep 20 && kill_all_process ) & ( echo "start supvisord" && /usr/bin/supervisord --configuration /etc/supervisord.conf ) 

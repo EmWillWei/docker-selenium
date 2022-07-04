@@ -1,13 +1,14 @@
-FROM ubuntu:focal-20220531
+FROM apache/airflow:2.2.5-python3.8
 LABEL authors="Selenium <selenium-developers@googlegroups.com>"
 
 #================================================
 # Customize sources for apt-get
 #================================================
-RUN  echo "deb http://archive.ubuntu.com/ubuntu focal main universe\n" > /etc/apt/sources.list \
-  && echo "deb http://archive.ubuntu.com/ubuntu focal-updates main universe\n" >> /etc/apt/sources.list \
-  && echo "deb http://security.ubuntu.com/ubuntu focal-security main universe\n" >> /etc/apt/sources.list
+# RUN  echo "deb http://archive.ubuntu.com/ubuntu focal main universe\n" > /etc/apt/sources.list \
+  # && echo "deb http://archive.ubuntu.com/ubuntu focal-updates main universe\n" >> /etc/apt/sources.list \
+  # && echo "deb http://security.ubuntu.com/ubuntu focal-security main universe\n" >> /etc/apt/sources.list
 
+USER root
 # No interactive frontend during docker build
 ENV DEBIAN_FRONTEND=noninteractive \
     DEBCONF_NONINTERACTIVE_SEEN=true
@@ -29,8 +30,10 @@ RUN apt-get -qqy update \
     curl \
     supervisor \
     gnupg2 \
+    procps \
+    vim \
   && rm -rf /var/lib/apt/lists/* /var/cache/apt/* \
-  && sed -i 's/securerandom\.source=file:\/dev\/random/securerandom\.source=file:\/dev\/urandom/' ./usr/lib/jvm/java-11-openjdk-amd64/conf/security/java.security
+  && sed -i 's/securerandom\.source=file:\/dev\/random/securerandom\.source=file:\/dev\/urandom/' /usr/lib/jvm/java-11-openjdk-amd64/conf/security/java.security
 
 #===================
 # Timezone settings
@@ -53,7 +56,7 @@ RUN groupadd seluser \
   && usermod -a -G sudo seluser \
   && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
   && echo 'seluser:secret' | chpasswd
-ENV HOME=/home/seluser
+ENV SELUSERHOME=/home/seluser
 
 #======================================
 # Add Grid check script
@@ -73,17 +76,17 @@ RUN  mkdir -p /opt/selenium /opt/selenium/assets /var/run/supervisor /var/log/su
   && chmod -R 777 /opt/selenium /opt/selenium/assets /var/run/supervisor /var/log/supervisor /etc/passwd \
   && wget --no-verbose https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.3.0/selenium-server-4.3.0.jar \
     -O /opt/selenium/selenium-server.jar \
-  && chgrp -R 0 /opt/selenium ${HOME} /opt/selenium/assets /var/run/supervisor /var/log/supervisor \
-  && chmod -R g=u /opt/selenium ${HOME} /opt/selenium/assets /var/run/supervisor /var/log/supervisor
+  && chgrp -R 0 /opt/selenium ${SELUSERHOME} /opt/selenium/assets /var/run/supervisor /var/log/supervisor \
+  && chmod -R g=u /opt/selenium ${SELUSERHOME} /opt/selenium/assets /var/run/supervisor /var/log/supervisor
 
 #===================================================
 # Run the following commands as non-privileged user
 #===================================================
-USER 1200:1201
+USER 50000
 
 # Boolean value, maps "--bind-host"
 ENV SE_BIND_HOST false
 
 
 
-CMD ["/opt/bin/entry_point.sh"]
+ENTRYPOINT ["/opt/bin/entry_point.sh"]
